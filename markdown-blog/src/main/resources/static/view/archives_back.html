@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>归档列表</title>
+</head>
+<body>
+	<button onclick="add()">新增</button>
+	<table width="600" border="1" cellspacing="0">
+		
+		<thead>
+			<tr>
+				<th>标题</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody id="tbMain"></tbody>
+	</table>
+
+	<script src="../js/jquery.min.js"></script>
+	<script src="../library/vue/vue.js"></script>
+	<script>
+		$.ajax({
+			type : 'post',
+			url : 'http://localhost:8080/blog/getAll',
+			success : function(data) {
+				var json = JSON.parse(data);
+				var $tbMain = $('#tbMain');
+				for (var i = 0, length = json.length; i < length; i++) {
+					var blog = '<tr><td><a href="http://localhost:8080/view/editor.html?id='
+							+ json[i].id
+							+ '" >'
+							+ json[i].title
+							+ '</a></td><td onclick=del('+json[i].id+')>删除</td></tr>';
+					$tbMain.append(blog);
+				}
+			}
+		});
+		
+		
+		function add(){
+			window.location.href="http://localhost:8080/view/editor.html";
+		}
+		
+		function del(id){
+			$.ajax({
+				type : 'delete',
+				url : 'http://localhost:8080/blog/' + id,
+				success : function(data) {
+					window.location.href="http://localhost:8080/view/archives.html";
+				}
+			});
+		}
+	</script>
+</body>
+</html>
